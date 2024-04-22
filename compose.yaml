@@ -1,0 +1,32 @@
+name: mtw
+
+services:
+  server:
+    build:
+      context: .
+      # secrets:
+      #   - admin-tool
+      args:
+        - ADMIN_LOGIN=admin
+    volumes:
+      # Logs
+      - logs-vol:/app/instance/logs/
+
+      # Conf
+      - conf-vol:/app/instance/conf/
+
+      # Sqlite3 db
+      - sqlite-db-vol:/app/instance/db/
+    ports:
+      - 55930:55930
+    environment:
+      - DEBUG=--debug
+
+volumes:
+  logs-vol:
+  sqlite-db-vol:
+  conf-vol:
+
+# secrets:
+#   admin-tool:
+#     file: ./admin-tool.txt
