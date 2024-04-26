@@ -30,7 +30,6 @@ COPY --from=builder /tmp/flask-app .
 # Install nano to edit the mtw-dist.ini configuration file
 RUN apt-get update && apt-get install -y \
     sqlite3 \
-    nano \
     && rm -rf /var/lib/apt/lists/*
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
@@ -44,20 +43,22 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 RUN sqlite3 /app/instance/db/mtw.db < /app/instance/db/mtw_schema.sql
 
 # Run set-mtw-admin tool
-# TODO: add admin-tool.txt to .dockerignore
 # ARG ADMIN_LOGIN
-# RUN --mount=type=secret,id=admin-tool \
-#     python /app/set-mtw-admin.py --login ${ADMIN_LOGIN} --pwd $(cat /run/secrets/admin-tool)
+# RUN --mount=type=secret,id=admin-settings \
+#     python /app/set-mtw-admin.py --login ${ADMIN_LOGIN} --pwd $(cat /run/secrets/admin-settings)
 
 # Run set-mtw-admin tool
-# 
 # Default values are provided for login and pwd,
 # /!\ DO NOT change these values with your personnal ones,
 # as they will be visible in the image layers.
 # Instead change them before first launch by running:
 # > docker compose run --rm -it mtw-server bash
 # > python set-mtw-admin.py --login <YOUR_ADMIN_LOGIN> --pwd <YOUR_ADMIN_PASSWORD>
-RUN python /app/set-mtw-admin.py --login mtwdev --pwd test
+RUN python /app/set-mtw-admin.py --login admin --pwd test
+
+# Copy mtw-dist.ini
+# Make sure that 'SPARQL_HOST = http://jena_fuseki:3030/' is uncommented
+COPY ./mtw-dist.ini /app/instance/conf/mtw-dist.ini
 
 # Expose the port that the application listens on.
 EXPOSE 55930

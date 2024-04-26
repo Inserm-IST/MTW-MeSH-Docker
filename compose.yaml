@@ -1,32 +1,88 @@
 name: mtw
 
 services:
+  # MTW server + worker
   server:
     build:
       context: .
-      # secrets:
-      #   - admin-tool
-      args:
-        - ADMIN_LOGIN=admin
+    init: true  # Use tini to handle messages
+    # TODO: move to entrypoint.sh
+    command: > 
+            bash -c "python /app/set-mtw-admin.py --login $${ADMIN_LOGIN} --pwd $$(cat /run/secrets/admin-settings)
+            && python mtw-server.py --host 0.0.0.0 $${DEBUG} & python mtw-worker.py $${DEBUG}"
+    depends_on:
+      - jena_fuseki
     volumes:
-      # Logs
+      # Volumes
       - logs-vol:/app/instance/logs/
-
-      # Conf
       - conf-vol:/app/instance/conf/
-
-      # Sqlite3 db
       - sqlite-db-vol:/app/instance/db/
     ports:
-      - 55930:55930
+      - 127.0.0.1:55930:55930
+    secrets:
+      - admin-settings
     environment:
       - DEBUG=--debug
+      - ADMIN_LOGIN=admin
+
+  # Jena Fuseki SPARQL server
+  jena_fuseki:
+    image: stain/jena-fuseki:latest
+    entrypoint: ["/sbin/tini", "--"]
+    # TODO: move to entrypoint.sh
+    command: >
+            bash -c "export ADMIN_PASSWORD=$$(cat /run/secrets/admin-settings) 
+            && source /docker-entrypoint.sh /jena-fuseki/fuseki-server --debug"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3030/$/ping"]
+      interval: 1m
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+      start_interval: 5s
+    volumes:
+      - fuseki-data:/fuseki
+    ports:
+      - 127.0.0.1:3030:3030
+    secrets:
+      - admin-settings
+    environment:
+      - JVM_ARGS=-Xmx2G
+      - TDB=2
+
+  # Service to load the mesh into the triple-store in jena_fuseki
+  staging:
+    extends: jena_fuseki
+    profiles: ["staging"]
+    entrypoint: ""
+    command: >
+            bash -c "mkdir -p /fuseki/configuration/ 
+            && cp /fuseki-tmp/mesh.ttl /fuseki/configuration/mesh.ttl
+            && read -p 'All the data in the current mesh will be lost. Are you sure (y/N) ? ' -n 1 -r REPLY
+            && echo ""
+            && if [[ $$REPLY =~ ^[Yy]$ ]]; 
+            then
+              /jena-fuseki/tdbloader2 --loc mesh  /staging/*.nt.gz;
+              java -cp /jena-fuseki/fuseki-server.jar jena.textindexer --desc=/fuseki/configuration/mesh.ttl;
+            else
+              echo "Abort..."
+            fi"
+    
+    volumes:
+      # Binds
+      - ./mesh.ttl:/fuseki-tmp/mesh.ttl
+      - ./mesh-data/:/staging/:ro
+
+      # Volumes
+      - fuseki-data:/fuseki
 
 volumes:
   logs-vol:
   sqlite-db-vol:
   conf-vol:
+  fuseki-data:
+  staging:
 
-# secrets:
-#   admin-tool:
-#     file: ./admin-tool.txt
+secrets:
+  admin-settings:
+    file: ./admin_settings.txt
