@@ -7,6 +7,7 @@ services:
       context: .
     init: true  # Use tini to handle messages
     # TODO: move to entrypoint.sh
+    # TODO: listen to container's ip rather than listening on all interface (0.0.0.0)
     command: > 
             bash -c "python /app/set-mtw-admin.py --login $${ADMIN_LOGIN} --pwd $$(cat /run/secrets/admin-settings)
             && python mtw-server.py --host 0.0.0.0 $${DEBUG} & python mtw-worker.py $${DEBUG}"
@@ -41,6 +42,7 @@ services:
       start_period: 30s
       start_interval: 5s
     volumes:
+      # Volumes
       - fuseki-data:/fuseki
     ports:
       - 127.0.0.1:3030:3030

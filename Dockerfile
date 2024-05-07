@@ -58,6 +58,8 @@ RUN python /app/set-mtw-admin.py --login admin --pwd test
 
 # Copy mtw-dist.ini
 # Make sure that 'SPARQL_HOST = http://jena_fuseki:3030/' is uncommented
+# TODO: config is not updated without rebuilding the image, find a better solution
+# maybe a staging service copying into the mtw-conf volume ?
 COPY ./mtw-dist.ini /app/instance/conf/mtw-dist.ini
 
 # Expose the port that the application listens on.

@@ -51,14 +51,14 @@ For more details see: [Loading MeSH datasets](https://github.com/filak/MTW-MeSH/
 
 Copy the official annual RDF dataset and your RDF translation dataset to the `./mesh-data/` directory.
 
+Make sure to validate your `mesh.nt.gz` and `mesh-trx_YYYY-MM-DD.nt.gz` file with `riot`.  
 
-Copy your `mesh.nt.gz` and `mesh-trx_YYYY-MM-DD.nt.gz` file to the `./mesh-data/` directory.
-
-Make sure to validate your input files with `riot`.  
 You can for example use the [Jena Docker image](https://github.com/stain/jena-docker/tree/master/jena) :
 ```bash
 docker run --rm --volume /$(pwd)/mesh-data/:/rdf stain/jena riot --validate mesh.nt.gz mesh-trx_YYYY-MM-DD.nt.gz
 ```
+
+---
 
 A special service called `staging` is part of the Compose file, to load the MeSH data into the triple store.  
 
