@@ -64,7 +64,9 @@ services:
             && echo ""
             && if [[ $$REPLY =~ ^[Yy]$ ]]; 
             then
-              /jena-fuseki/tdbloader2 --loc mesh  /staging/*.nt.gz;
+              /jena-fuseki/tdbloader2 --loc /fuseki/databases/mesh /staging/mesh.nt.gz;
+              /jena-fuseki/tdbloader2 --loc /fuseki/databases/mesh /staging/mesh-trx-*.nt.gz;
+              cd /fuseki;
               java -cp /jena-fuseki/fuseki-server.jar jena.textindexer --desc=/fuseki/configuration/mesh.ttl;
             else
               echo "Abort..."
