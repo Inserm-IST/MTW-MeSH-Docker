@@ -1,0 +1,23 @@
+#mtw.example.com:443 {
+#    root home/htdocs
+#    log logs/mtw-access.txt
+#    errors logs/mtw-error.txt
+#    tls self_signed
+#
+#    proxy /mtw localhost:55930 {
+#        transparent
+#        keepalive 0
+#    }
+#}
+
+:80 {
+    # Set this path to your site's directory.
+    # root * /usr/share/caddy
+    # file_server
+
+	reverse_proxy /mtw/* server:55930
+    reverse_proxy /fuseki/* jena_fuseki:3030
+	# file_server
+
+    # reverse_proxy server:55930
+}

@@ -71,7 +71,6 @@ services:
             else
               echo "Abort..."
             fi"
-    
     volumes:
       # Binds
       - ./mesh.ttl:/fuseki-tmp/mesh.ttl
@@ -80,12 +79,31 @@ services:
       # Volumes
       - fuseki-data:/fuseki
 
+  # Caddy Reverse Proxy
+  caddy:
+    image: caddy:2.7-alpine
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8080:80
+      # - 443:443
+      # - 443:443/udp
+    volumes:
+      # - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      # - $PWD/site:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+
 volumes:
   logs-vol:
   sqlite-db-vol:
   conf-vol:
   fuseki-data:
   staging:
+  caddy_data:
+  caddy_config:
 
 secrets:
   admin-settings:
