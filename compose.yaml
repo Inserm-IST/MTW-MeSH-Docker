@@ -19,7 +19,7 @@ services:
       - conf-vol:/app/instance/conf/
       - sqlite-db-vol:/app/instance/db/
     ports:
-      - 127.0.0.1:55930:55930
+      - 55930:55930
     secrets:
       - admin-settings
     environment:
@@ -45,7 +45,7 @@ services:
       # Volumes
       - fuseki-data:/fuseki
     ports:
-      - 127.0.0.1:3030:3030
+      - 3030:3030
     secrets:
       - admin-settings
     environment:
@@ -86,7 +86,7 @@ services:
     cap_add:
       - NET_ADMIN
     ports:
-      - 8080:80
+      - 80:80
       # - 443:443
       # - 443:443/udp
     volumes:

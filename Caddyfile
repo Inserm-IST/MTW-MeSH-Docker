@@ -10,14 +10,25 @@
 #    }
 #}
 
-:80 {
-    # Set this path to your site's directory.
-    # root * /usr/share/caddy
-    # file_server
+# mtw.localhost:80 {
+#     # Set this path to your site's directory.
+#     # root * /usr/share/caddy
+#     # file_server
 
-	reverse_proxy /mtw/* server:55930
-    reverse_proxy /fuseki/* jena_fuseki:3030
-	# file_server
+# 	reverse_proxy /mtw/* server:55930
+#     reverse_proxy /fuseki/* jena_fuseki:3030
+# 	# file_server
 
-    # reverse_proxy server:55930
+#     #reverse_proxy server:55930
+# }
+
+mtw.localhost:80 {
+    # TODO : serve static assets from a volume
+    # TODO : logs
+    # TODO : TLS
+    reverse_proxy server:55930
+}
+
+fuseki.localhost:80 {    
+    reverse_proxy jena_fuseki:3030
 }
