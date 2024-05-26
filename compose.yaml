@@ -96,6 +96,10 @@ services:
   reverse-proxy:
     # The official v3 Traefik docker image
     image: traefik:v3.0
+    restart: unless-stopped
+    depends_on:
+      - server
+      - jena_fuseki
     # Enables the web UI and tells Traefik to listen to docker
     command: 
       - "--api.insecure=true"
