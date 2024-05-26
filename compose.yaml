@@ -83,6 +83,9 @@ services:
   caddy:
     image: caddy:2.7-alpine
     restart: unless-stopped
+    depends_on:
+      - server
+      - jena_fuseki
     cap_add:
       - NET_ADMIN
     ports:
