@@ -17,12 +17,19 @@ services:
       # Volumes
       - mtw-data:/app/instance/
     ports:
-      - 127.0.0.1:55930:55930
+      - 55930:55930
     secrets:
       - admin-settings
     environment:
       - DEBUG=--debug
       - ADMIN_LOGIN=admin
+    labels:
+      # The domain the service will respond to
+      - "traefik.http.routers.server.rule=Host(`mtw.localhost`)"
+      # Explicitly tell Traefik to expose this container
+      - "traefik.enable=true"
+      # Allow request only from the predefined entry point named "web"
+      - "traefik.http.routers.server.entrypoints=web"
 
   # Jena Fuseki SPARQL server
   jena_fuseki:
@@ -43,13 +50,20 @@ services:
       # Volumes
       - fuseki-data:/fuseki
     ports:
-      - 127.0.0.1:3030:3030
+      - 3030:3030
     secrets:
       - admin-settings
     environment:
       # TODO: Find optimal setting for RAM value (4G ?)
       - JVM_ARGS=-Xmx2G
       - TDB=2
+    labels:
+      # The domain the service will respond to
+      - "traefik.http.routers.jena_fuseki.rule=Host(`fuseki.localhost`)"
+      # Explicitly tell Traefik to expose this container
+      - "traefik.enable=true"
+      # Allow request only from the predefined entry point named "web"
+      - "traefik.http.routers.jena_fuseki.entrypoints=web"
 
   # Service to load the mesh into the triple-store in jena_fuseki
   staging:
@@ -78,6 +92,27 @@ services:
 
       # Volumes
       - fuseki-data:/fuseki
+
+  reverse-proxy:
+    # The official v3 Traefik docker image
+    image: traefik:v3.0
+    # Enables the web UI and tells Traefik to listen to docker
+    command: 
+      - "--api.insecure=true"
+      # Enabling Docker provider
+      - "--providers.docker"
+      # Do not expose containers unless explicitly told so
+      - "--providers.docker.exposedbydefault=false"
+      # Traefik will listen to incoming request on the port 80 (HTTP)
+      - "--entryPoints.web.address=:80"
+    ports:
+      # The HTTP port
+      - 80:80
+      # The Web UI (enabled by --api.insecure=true)
+      - 8080:8080
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   mtw-data:
