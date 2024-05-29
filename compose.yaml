@@ -15,9 +15,7 @@ services:
       - jena_fuseki
     volumes:
       # Volumes
-      - logs-vol:/app/instance/logs/
-      - conf-vol:/app/instance/conf/
-      - sqlite-db-vol:/app/instance/db/
+      - mtw-data:/app/instance/
     ports:
       - 127.0.0.1:55930:55930
     secrets:
@@ -82,9 +80,7 @@ services:
       - fuseki-data:/fuseki
 
 volumes:
-  logs-vol:
-  sqlite-db-vol:
-  conf-vol:
+  mtw-data:
   fuseki-data:
   staging:
 
