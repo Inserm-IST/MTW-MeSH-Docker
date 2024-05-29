@@ -49,6 +49,7 @@ services:
     secrets:
       - admin-settings
     environment:
+      # TODO: Find optimal setting for RAM value (4G ?)
       - JVM_ARGS=-Xmx2G
       - TDB=2
 
