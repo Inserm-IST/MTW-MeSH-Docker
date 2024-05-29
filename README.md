@@ -74,6 +74,7 @@ docker compose run --rm staging
 ```bash
 docker compose up -d
 ```
-MTW should be accessible on: http://127.0.0.1:55930/mtw/  
-Jena fuseki on: http://127.0.0.1:3030/#/
+
+MTW should be accessible on: [http://mtw.localhost/](http://mtw.localhost/)
+Jena fuseki on: [http://fuseki.localhost/](http://fuseki.localhost/)
 
