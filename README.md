@@ -75,6 +75,6 @@ docker compose run --rm staging
 docker compose up -d
 ```
 
-MTW should be accessible on: [http://mtw.localhost/](http://mtw.localhost/)
+MTW should be accessible on: [http://mtw.localhost/](http://mtw.localhost/)  
 Jena fuseki on: [http://fuseki.localhost/](http://fuseki.localhost/)
 
