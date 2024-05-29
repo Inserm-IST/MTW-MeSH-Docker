@@ -15,9 +15,7 @@ services:
       - jena_fuseki
     volumes:
       # Volumes
-      - logs-vol:/app/instance/logs/
-      - conf-vol:/app/instance/conf/
-      - sqlite-db-vol:/app/instance/db/
+      - mtw-data:/app/instance/
     ports:
       - 55930:55930
     secrets:
@@ -49,6 +47,7 @@ services:
     secrets:
       - admin-settings
     environment:
+      # TODO: Find optimal setting for RAM value (4G ?)
       - JVM_ARGS=-Xmx2G
       - TDB=2
 
@@ -100,9 +99,7 @@ services:
       - caddy_config:/config
 
 volumes:
-  logs-vol:
-  sqlite-db-vol:
-  conf-vol:
+  mtw-data:
   fuseki-data:
   staging:
   caddy_data:
