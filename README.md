@@ -3,6 +3,8 @@
 
 This Compose file make uses of this [Jena Fuseki docker image](https://github.com/stain/jena-docker/tree/master/jena-fuseki).
 
+---
+
 # Installation
 
 Install [Docker Desktop](https://www.docker.com/products/docker-desktop) for Windows and macOS.
@@ -17,6 +19,8 @@ git clone https://github.com/JulienBacquart/MTW-MeSH-Docker
 ```bash
  cd MTW-MeSH-Docker/
 ```
+
+---
 
 # Initial setup
 
@@ -56,11 +60,12 @@ Copy the official annual RDF dataset and your RDF translation dataset to the `./
 Make sure to validate your `mesh.nt.gz` and `mesh-trx_YYYY-MM-DD.nt.gz` file with `riot`.  
 
 You can for example use the [Jena Docker image](https://github.com/stain/jena-docker/tree/master/jena) :
-```bash
-docker run --rm --volume /$(pwd)/mesh-data/:/rdf stain/jena riot --validate mesh.nt.gz mesh-trx_YYYY-MM-DD.nt.gz
-```
 
----
+```bash
+docker run --rm \
+--volume /$(pwd)/mesh-data/:/rdf \
+stain/jena riot --validate mesh.nt.gz mesh-trx_YYYY-MM-DD.nt.gz
+```
 
 A special service called `staging` is part of the Compose file to load the MeSH data into the triple store.  
 
@@ -72,12 +77,118 @@ Type the following command:
 docker compose run --rm staging
 ```
 
+---
+
 # Run MTW
 ```bash
 docker compose up -d
 ```
-MTW should be accessible on: [http://mtw.localhost/](http://mtw.localhost/)  
-Jena fuseki on: [http://fuseki.localhost/](http://fuseki.localhost/)
+MTW should be accessible on: http://127.0.0.1:55930/mtw/  
+Jena fuseki on: http://127.0.0.1:3030/#/
+
+---
+
+# Annual MeSH Updates
+
+For more details see: [MeSH Annual Updates](https://github.com/filak/MTW-MeSH/wiki/MeSH-Annual-Updates)
+
+## Backup your MeSH dataset using the Fuseki interface
+
+In the fuseki interface, in the `Manage` tab, click on the `backup` button for the mesh dataset.
+
+You should now have a backup file `mesh_YYYY-MM-DD_....nt.gz` in the `backups` folder of the `mtw_fuseki-data` volume.
+
+<INSERT SCREENSHOT>
+
+If we want to save this `mesh_YYYY-MM-DD_....nt.gz` file from the Docker volume to our local `mesh-data` folder, we can use the following command:
+
+```bash
+docker run -it --rm \
+--volume mtw_fuseki-data:/fuseki \
+--volume /$(pwd)/mesh-data/:/mesh-data \
+--workdir //fuseki stain/jena \
+cp backups/mesh_2024-06-11_12-27-13.nq.gz //mesh-data/
+```
+
+## Download the official MeSH RDF dataset:
+
+```bash
+curl https://nlmpubs.nlm.nih.gov/projects/mesh/rdf/mesh.nt.gz --ssl-no-revoke -O
+```
+
+## Validate the datasets :
+
+Validate the backup `mesh_YYYY-MM-DD_....nt.gz` and the official MeSH RDF dataset `mesh.nt.gz` with `riot`.  
+
+If the `mesh_YYYY-MM-DD_....nt.gz` and  `mesh.nt.gz` files are stored in our local `mesh-data` folder, we can use the [Jena Docker image](https://github.com/stain/jena-docker/tree/master/jena) :
+
+```bash
+docker run --rm --volume /$(pwd)/mesh-data/:/rdf stain/jena \
+riot --validate mesh.nt.gz mesh_YYYY-MM-DD_....nt.gz
+```
+
+## Extract the translation from the backup using mesh-nt2trx tool :
+
+```bash
+docker run -it --rm --volume /$(pwd)/mesh-data/:/rdf --workdir //rdf mtw-server \
+python3 //app/tools/mesh-nt2trx.py mesh_YYYY-MM-DD_....nt.gz
+```
+
+You should now have a translation file `mtw-trx_YYYY-MM-DD.nt.gz`
+
+## Delete the old MeSH dataset :
+
+In the fuseki interface, in the `Manage` tab, click on the `remove` button for the mesh dataset.
+
+<!-- ```bash
+docker run -it --rm --volume mtw_fuseki-data:/fuseki --workdir //fuseki stain/jena bash
+```
+
+```bash
+rm -r databases/mesh/ indexes/mesh
+``` -->
+
+## Stop MTW and Fuseki containers :
+
+```bash
+docker compose down
+```
+
+## Update MTW config file for new target year/period :
+
+```bash
+docker run -it --rm \
+--volume mtw_mtw-data:/app/instance/ \
+--workdir //app/instance/ mtw-server \
+bash
+```
+
+```bash
+apt-get update && apt-get install nano
+```
+```bash
+nano conf/mtw-dist.ini
+```
+
+Update the values `TARGET_YEAR`, `PREV_YEAR_DEF`, `PREV_YEARS` according ro your configuration.   
+
+Save and exit: `CTRL+S`, `CTRL+X`
+
+## Clear the MTW cache
+```bash
+rm cache/*
+```
+```bash
+exit
+```
+
+## Restart MTW
+
+```bash
+docker compose up -d
+```
+
+---
 
 # Credits
 
