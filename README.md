@@ -110,8 +110,15 @@ docker compose run --rm staging
 docker compose up -d
 ```
 
-MTW should be accessible on: <http://mtw.localhost/>  
-Jena fuseki on: <http://fuseki.localhost/>
+- Using Traefik/Caddy as reverse proxy:
+  
+  - MTW should be accessible on: <http://mtw.localhost/>  
+  - Jena fuseki on: <http://fuseki.localhost/>
+
+- Without reverse proxy:
+
+  - MTW should be accessible on: <http://127.0.0.1:55930/mtw/>  
+  - Jena fuseki on: <http://127.0.0.1:3030s/#/>
 
 ---
 
