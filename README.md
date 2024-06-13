@@ -1,5 +1,5 @@
 
-[Docker Compose](https://github.com/docker/compose) file to manage the build and deployment of [MTW-MeSH](https://github.com/filak/MTW-MeSH), an app developped for the National Medical Library([NML](https://nlk.cz/), Prague, Czech Republic) for the translation of MeSH vocabulary ([Medical Subject Headings](https://www.nlm.nih.gov/mesh/)).
+[Docker Compose](https://github.com/docker/compose) file to manage the build and deployment of [MTW-MeSH](https://github.com/filak/MTW-MeSH), an app developped for the National Medical Library ([NML](https://nlk.cz/), Prague, Czech Republic) for the translation of MeSH vocabulary ([Medical Subject Headings](https://www.nlm.nih.gov/mesh/)).
 
 This Compose file make uses of this [Jena Fuseki docker image](https://github.com/stain/jena-docker/tree/master/jena-fuseki).
 
@@ -83,8 +83,8 @@ docker compose run --rm staging
 ```bash
 docker compose up -d
 ```
-MTW should be accessible on: http://127.0.0.1:55930/mtw/  
-Jena fuseki on: http://127.0.0.1:3030/#/
+MTW should be accessible on: http://mtw.localhost/  
+Jena fuseki on: http://fuseki.localhost/
 
 ---
 
@@ -134,7 +134,7 @@ docker run -it --rm --volume /$(pwd)/mesh-data/:/rdf --workdir //rdf mtw-server 
 python3 //app/tools/mesh-nt2trx.py mesh_YYYY-MM-DD_....nt.gz
 ```
 
-You should now have a translation file `mtw-trx_YYYY-MM-DD.nt.gz`
+You should now have a translation file `mtw-trx_YYYY-MM-DD.nt.gz` in your local `mesh-data` folder.
 
 ## Delete the old MeSH dataset :
 
@@ -153,6 +153,9 @@ rm -r databases/mesh/ indexes/mesh
 ```bash
 docker compose down
 ```
+
+## Loading the MeSH datasets
+Follow the steps in [Loading the MeSH datasets](#loading-the-mesh-datasets)
 
 ## Update MTW config file for new target year/period :
 
@@ -174,7 +177,8 @@ Update the values `TARGET_YEAR`, `PREV_YEAR_DEF`, `PREV_YEARS` according ro your
 
 Save and exit: `CTRL+S`, `CTRL+X`
 
-## Clear the MTW cache
+## Clear the MTW cache :
+
 ```bash
 rm cache/*
 ```
@@ -182,7 +186,7 @@ rm cache/*
 exit
 ```
 
-## Restart MTW
+## Restart MTW :
 
 ```bash
 docker compose up -d
