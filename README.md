@@ -6,6 +6,14 @@ This Compose file make uses of this [Jena Fuseki docker image](https://github.co
 
 ---
 
+This repository has three branches :
+
+- [main](https://github.com/Inserm-IST/MTW-MeSH-Docker/tree/main): base configuration without reverse proxy
+- [traefik](https://github.com/Inserm-IST/MTW-MeSH-Docker/tree/traefik): using [traefik](https://github.com/traefik/traefik) as reverse proxy
+- [caddy](https://github.com/Inserm-IST/MTW-MeSH-Docker/tree/caddy): using [caddy](https://github.com/caddyserver/caddy) as reverse proxy
+
+---
+
 **Contents**
 
 - [Installation](#installation)
