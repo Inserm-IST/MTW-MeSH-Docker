@@ -56,7 +56,7 @@ All modified files are saved to volumes, so as long as the volumes are persisted
 #### Edit the mtw-dist.ini file
 
 **Important values are marked with !**  
-Modify the values for your personnal configuration, including `TARGET_YEAR`, `TARGET_LANG`, `TARGET_NS` etc.  
+Modify the values for your personal configuration, including `TARGET_YEAR`, `TARGET_LANG`, `TARGET_NS` etc.  
 
 Make sure this line is uncommented :  
 `SPARQL_HOST = http://jena_fuseki:3030/`
@@ -94,7 +94,7 @@ stain/jena riot --validate mesh.nt.gz mesh-trx_YYYY-MM-DD.nt.gz
 
 A special service called `staging` is part of the Compose file to load the MeSH data into the triple store.  
 
-**All the data already present in the Mesh dataset in Jena Fuseki will be lost.**
+> :warning: **Warning:** All the data already present in the Mesh dataset in Jena Fuseki will be lost.
 
 Type the following command:
 
@@ -123,9 +123,9 @@ For more details see: [MeSH Annual Updates](https://github.com/filak/MTW-MeSH/wi
 
 In the fuseki interface, in the `Manage` tab, click on the `backup` button for the mesh dataset.
 
-You should now have a backup file `mesh_YYYY-MM-DD_....nt.gz` in the `backups` folder of the `mtw_fuseki-data` volume.
+![Backup using Fuseki interface](.images/screenshot_fuseki_backup_resize.png)
 
-<INSERT SCREENSHOT>
+You should now have a backup file `mesh_YYYY-MM-DD_....nt.gz` in the `backups` folder of the `mtw_fuseki-data` volume.
 
 If we want to save this `mesh_YYYY-MM-DD_....nt.gz` file from the Docker volume to our local `mesh-data` folder, we can use the following command:
 
@@ -166,6 +166,8 @@ You should now have a translation file `mtw-trx_YYYY-MM-DD.nt.gz` in your local 
 ### Delete the old MeSH dataset
 
 In the fuseki interface, in the `Manage` tab, click on the `remove` button for the mesh dataset.
+
+![Remove using Fuseki interface](.images/screenshot_fuseki_backup_resize.png)
 
 <!-- ```bash
 docker run -it --rm --volume mtw_fuseki-data:/fuseki --workdir //fuseki stain/jena bash
@@ -226,6 +228,6 @@ docker compose up -d
 
 ## Credits
 
-- Thanks to [filak](https://github.com/filak) for his work on the [MTW app](https://github.com/filak/MTW-MeSH), his assistance in deploying it and his help into writting this Docker Compose file.
+- Thanks to [filak](https://github.com/filak) for his work on the [MTW app](https://github.com/filak/MTW-MeSH), his assistance in deploying it and his help into writing this Docker Compose file.
 
 - [JulienBacquart](https://github.com/JulienBacquart)
