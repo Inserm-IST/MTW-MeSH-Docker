@@ -1,11 +1,12 @@
+# MTW-MeSH-Docker
 
-[Docker Compose](https://github.com/docker/compose) file to manage the build and deployment of [MTW-MeSH](https://github.com/filak/MTW-MeSH), an app developped for the National Medical Library ([NML](https://nlk.cz/), Prague, Czech Republic) for the translation of MeSH vocabulary ([Medical Subject Headings](https://www.nlm.nih.gov/mesh/)).
+[Docker Compose](https://github.com/docker/compose) file to manage the build and deployment of [MTW-MeSH](https://github.com/filak/MTW-MeSH), an app developed for the National Medical Library ([NML](https://nlk.cz/), Prague, Czech Republic) for the translation of MeSH vocabulary ([Medical Subject Headings](https://www.nlm.nih.gov/mesh/)).
 
 This Compose file make uses of this [Jena Fuseki docker image](https://github.com/stain/jena-docker/tree/master/jena-fuseki).
 
 ---
 
-# Installation
+## Installation
 
 Install [Docker Desktop](https://www.docker.com/products/docker-desktop) for Windows and macOS.
 
@@ -16,20 +17,21 @@ git clone https://github.com/JulienBacquart/MTW-MeSH-Docker
 ```
 
  Move into the new directory :
+
 ```bash
  cd MTW-MeSH-Docker/
 ```
 
 ---
 
-# Initial setup
+## Initial setup
 
-These operations are only necessary before the first launch.   
-All modified files are saved to volumes, so as long as the volumes are persisted (including moving to a new release, removing the containers etc.) it's not necessary to re-run these operations. 
+These operations are only necessary before the first launch.  
+All modified files are saved to volumes, so as long as the volumes are persisted (including moving to a new release, removing the containers etc.) it's not necessary to re-run these operations.
 
-## Edit the default configuration
+### Edit the default configuration
 
-### Edit the mtw-dist.ini file :
+#### Edit the mtw-dist.ini file
 
 **Important values are marked with !**  
 Modify the values for your personnal configuration, including `TARGET_YEAR`, `TARGET_LANG`, `TARGET_NS` etc.  
@@ -39,23 +41,24 @@ Make sure this line is uncommented :
 
 For more details, refer to [MTW-MeSH Wiki](https://github.com/filak/MTW-MeSH/wiki/Installation-on-Windows#mtw-binaries)
 
-### Change the default password :
+#### Change the default password
 
 A default value is provided for the admin pass for both MTW and Jena Fuseki as a secret in the `admin_settings.txt` file.  
 Make sure to change this value and not to reveal then content of this file (via git for example).
 
-## Build the image
+### Build the image
+
 ```bash
 docker compose build
 ```
 
-## Loading the MeSH datasets
+### Loading the MeSH datasets
 
 For more details see: [Loading MeSH datasets](https://github.com/filak/MTW-MeSH/wiki/Loading-MeSH-datasets)
 
 Copy the official annual RDF dataset and your RDF translation dataset to the `./mesh-data/` directory.
 
-### Validate the datasets :
+#### Validate the datasets
 
 Make sure to validate your `mesh.nt.gz` and `mesh-trx_YYYY-MM-DD.nt.gz` file with `riot`.  
 
@@ -79,20 +82,22 @@ docker compose run --rm staging
 
 ---
 
-# Run MTW
+## Run MTW
+
 ```bash
 docker compose up -d
 ```
-MTW should be accessible on: http://mtw.localhost/  
-Jena fuseki on: http://fuseki.localhost/
+
+MTW should be accessible on: <http://mtw.localhost/>  
+Jena fuseki on: <http://fuseki.localhost/>
 
 ---
 
-# Annual MeSH Updates
+## Annual MeSH Updates
 
 For more details see: [MeSH Annual Updates](https://github.com/filak/MTW-MeSH/wiki/MeSH-Annual-Updates)
 
-## Backup your MeSH dataset using the Fuseki interface
+### Backup your MeSH dataset using the Fuseki interface
 
 In the fuseki interface, in the `Manage` tab, click on the `backup` button for the mesh dataset.
 
@@ -110,13 +115,13 @@ docker run -it --rm \
 cp backups/mesh_2024-06-11_12-27-13.nq.gz //mesh-data/
 ```
 
-## Download the official MeSH RDF dataset:
+### Download the official MeSH RDF dataset
 
 ```bash
 curl https://nlmpubs.nlm.nih.gov/projects/mesh/rdf/mesh.nt.gz --ssl-no-revoke -O
 ```
 
-## Validate the datasets :
+### Validate the datasets
 
 Validate the backup `mesh_YYYY-MM-DD_....nt.gz` and the official MeSH RDF dataset `mesh.nt.gz` with `riot`.  
 
@@ -127,7 +132,7 @@ docker run --rm --volume /$(pwd)/mesh-data/:/rdf stain/jena \
 riot --validate mesh.nt.gz mesh_YYYY-MM-DD_....nt.gz
 ```
 
-## Extract the translation from the backup using mesh-nt2trx tool :
+### Extract the translation from the backup using mesh-nt2trx tool
 
 ```bash
 docker run -it --rm --volume /$(pwd)/mesh-data/:/rdf --workdir //rdf mtw-server \
@@ -136,7 +141,7 @@ python3 //app/tools/mesh-nt2trx.py mesh_YYYY-MM-DD_....nt.gz
 
 You should now have a translation file `mtw-trx_YYYY-MM-DD.nt.gz` in your local `mesh-data` folder.
 
-## Delete the old MeSH dataset :
+### Delete the old MeSH dataset
 
 In the fuseki interface, in the `Manage` tab, click on the `remove` button for the mesh dataset.
 
@@ -148,16 +153,17 @@ docker run -it --rm --volume mtw_fuseki-data:/fuseki --workdir //fuseki stain/je
 rm -r databases/mesh/ indexes/mesh
 ``` -->
 
-## Stop MTW and Fuseki containers :
+### Stop MTW and Fuseki containers
 
 ```bash
 docker compose down
 ```
 
-## Loading the MeSH datasets
+### Loading the MeSH datasets
+
 Follow the steps in [Loading the MeSH datasets](#loading-the-mesh-datasets)
 
-## Update MTW config file for new target year/period :
+### Update MTW config file for new target year/period
 
 ```bash
 docker run -it --rm \
@@ -169,24 +175,26 @@ bash
 ```bash
 apt-get update && apt-get install nano
 ```
+
 ```bash
 nano conf/mtw-dist.ini
 ```
 
-Update the values `TARGET_YEAR`, `PREV_YEAR_DEF`, `PREV_YEARS` according ro your configuration.   
+Update the values `TARGET_YEAR`, `PREV_YEAR_DEF`, `PREV_YEARS` according ro your configuration.
 
 Save and exit: `CTRL+S`, `CTRL+X`
 
-## Clear the MTW cache :
+### Clear the MTW cache
 
 ```bash
 rm cache/*
 ```
+
 ```bash
 exit
 ```
 
-## Restart MTW :
+### Restart MTW
 
 ```bash
 docker compose up -d
@@ -194,9 +202,8 @@ docker compose up -d
 
 ---
 
-# Credits
+## Credits
 
 - Thanks to [filak](https://github.com/filak) for his work on the [MTW app](https://github.com/filak/MTW-MeSH), his assistance in deploying it and his help into writting this Docker Compose file.
 
 - [JulienBacquart](https://github.com/JulienBacquart)
-
