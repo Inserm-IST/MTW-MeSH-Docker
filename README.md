@@ -1,10 +1,32 @@
-# MTW-MeSH-Docker
+# MTW-MeSH-Docker <!-- omit from toc -->
 
 [Docker Compose](https://github.com/docker/compose) file to manage the build and deployment of [MTW-MeSH](https://github.com/filak/MTW-MeSH), an app developed for the National Medical Library ([NML](https://nlk.cz/), Prague, Czech Republic) for the translation of MeSH vocabulary ([Medical Subject Headings](https://www.nlm.nih.gov/mesh/)).
 
 This Compose file make uses of this [Jena Fuseki docker image](https://github.com/stain/jena-docker/tree/master/jena-fuseki).
 
 ---
+
+- [Installation](#installation)
+- [Initial setup](#initial-setup)
+  - [Edit the default configuration](#edit-the-default-configuration)
+    - [Edit the mtw-dist.ini file](#edit-the-mtw-distini-file)
+    - [Change the default password](#change-the-default-password)
+  - [Build the image](#build-the-image)
+  - [Loading the MeSH datasets](#loading-the-mesh-datasets)
+    - [Validate the datasets](#validate-the-datasets)
+- [Run MTW](#run-mtw)
+- [Annual MeSH Updates](#annual-mesh-updates)
+  - [Backup your MeSH dataset using the Fuseki interface](#backup-your-mesh-dataset-using-the-fuseki-interface)
+  - [Download the official MeSH RDF dataset](#download-the-official-mesh-rdf-dataset)
+  - [Validate the datasets](#validate-the-datasets-1)
+  - [Extract the translation from the backup using mesh-nt2trx tool](#extract-the-translation-from-the-backup-using-mesh-nt2trx-tool)
+  - [Delete the old MeSH dataset](#delete-the-old-mesh-dataset)
+  - [Stop MTW and Fuseki containers](#stop-mtw-and-fuseki-containers)
+  - [Loading the MeSH datasets](#loading-the-mesh-datasets-1)
+  - [Update MTW config file for new target year/period](#update-mtw-config-file-for-new-target-yearperiod)
+  - [Clear the MTW cache](#clear-the-mtw-cache)
+  - [Restart MTW](#restart-mtw)
+- [Credits](#credits)
 
 ## Installation
 
