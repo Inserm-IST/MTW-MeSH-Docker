@@ -6,6 +6,8 @@ This Compose file make uses of this [Jena Fuseki docker image](https://github.co
 
 ---
 
+**Contents**
+
 - [Installation](#installation)
 - [Initial setup](#initial-setup)
   - [Edit the default configuration](#edit-the-default-configuration)
@@ -18,11 +20,11 @@ This Compose file make uses of this [Jena Fuseki docker image](https://github.co
 - [Annual MeSH Updates](#annual-mesh-updates)
   - [Backup your MeSH dataset using the Fuseki interface](#backup-your-mesh-dataset-using-the-fuseki-interface)
   - [Download the official MeSH RDF dataset](#download-the-official-mesh-rdf-dataset)
-  - [Validate the datasets](#validate-the-datasets-1)
+  - [Validate the datasets with riot](#validate-the-datasets-with-riot)
   - [Extract the translation from the backup using mesh-nt2trx tool](#extract-the-translation-from-the-backup-using-mesh-nt2trx-tool)
   - [Delete the old MeSH dataset](#delete-the-old-mesh-dataset)
   - [Stop MTW and Fuseki containers](#stop-mtw-and-fuseki-containers)
-  - [Loading the MeSH datasets](#loading-the-mesh-datasets-1)
+  - [Load the MeSH datasets](#load-the-mesh-datasets)
   - [Update MTW config file for new target year/period](#update-mtw-config-file-for-new-target-yearperiod)
   - [Clear the MTW cache](#clear-the-mtw-cache)
   - [Restart MTW](#restart-mtw)
@@ -65,8 +67,9 @@ For more details, refer to [MTW-MeSH Wiki](https://github.com/filak/MTW-MeSH/wik
 
 #### Change the default password
 
-A default value is provided for the admin pass for both MTW and Jena Fuseki as a secret in the `admin_settings.txt` file.  
-Make sure to change this value and not to reveal then content of this file (via git for example).
+A default value is provided for the admin pass for both MTW and Jena Fuseki as a secret in the `admin_settings.txt` file.
+
+> :warning: **Warning:** Make sure to change this value and not to reveal then content of this file (via *git* for example).
 
 ### Build the image
 
@@ -150,7 +153,7 @@ cp backups/mesh_2024-06-11_12-27-13.nq.gz //mesh-data/
 curl https://nlmpubs.nlm.nih.gov/projects/mesh/rdf/mesh.nt.gz --ssl-no-revoke -O
 ```
 
-### Validate the datasets
+### Validate the datasets with riot
 
 Validate the backup `mesh_YYYY-MM-DD_....nt.gz` and the official MeSH RDF dataset `mesh.nt.gz` with `riot`.  
 
@@ -190,7 +193,7 @@ rm -r databases/mesh/ indexes/mesh
 docker compose down
 ```
 
-### Loading the MeSH datasets
+### Load the MeSH datasets
 
 Follow the steps in [Loading the MeSH datasets](#loading-the-mesh-datasets)
 
