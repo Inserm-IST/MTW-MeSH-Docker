@@ -38,6 +38,8 @@ This repository has three branches :
   - [Restart MTW](#restart-mtw)
 - [Credits](#credits)
 
+---
+
 ## Installation
 
 Install [Docker Desktop](https://www.docker.com/products/docker-desktop) for Windows and macOS.
@@ -148,12 +150,16 @@ You should now have a backup file `mesh_YYYY-MM-DD_....nt.gz` in the `backups` f
 If we want to save this `mesh_YYYY-MM-DD_....nt.gz` file from the Docker volume to our local `mesh-data` folder, we can use the following command:
 
 ```bash
+docker cp mtw-jena_fuseki-1:/fuseki/backups/mesh_YYYY-MM-DD_....nt.gz ./mesh-data/
+```
+
+<!-- ```bash
 docker run -it --rm \
 --volume mtw_fuseki-data:/fuseki \
 --volume /$(pwd)/mesh-data/:/mesh-data \
 --workdir //fuseki stain/jena \
 cp backups/mesh_YYYY-MM-DD_....nt.gz //mesh-data/
-```
+``` -->
 
 ### Download the official MeSH RDF dataset
 
@@ -213,8 +219,8 @@ Follow the steps in [Loading the MeSH datasets](#loading-the-mesh-datasets)
 ```bash
 docker run -it --rm \
 --volume mtw_mtw-data:/app/instance/ \
---workdir //app/instance/ mtw-server \
-bash
+--workdir //app/instance/ \
+mtw-server bash
 ```
 
 ```bash
