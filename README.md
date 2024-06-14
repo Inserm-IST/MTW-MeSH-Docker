@@ -152,7 +152,7 @@ docker run -it --rm \
 --volume mtw_fuseki-data:/fuseki \
 --volume /$(pwd)/mesh-data/:/mesh-data \
 --workdir //fuseki stain/jena \
-cp backups/mesh_2024-06-11_12-27-13.nq.gz //mesh-data/
+cp backups/mesh_YYYY-MM-DD_....nt.gz //mesh-data/
 ```
 
 ### Download the official MeSH RDF dataset
@@ -168,14 +168,17 @@ Validate the backup `mesh_YYYY-MM-DD_....nt.gz` and the official MeSH RDF datase
 If the `mesh_YYYY-MM-DD_....nt.gz` and  `mesh.nt.gz` files are stored in our local `mesh-data` folder, we can use the [Jena Docker image](https://github.com/stain/jena-docker/tree/master/jena) :
 
 ```bash
-docker run --rm --volume /$(pwd)/mesh-data/:/rdf stain/jena \
+docker run --rm \
+--volume /$(pwd)/mesh-data/:/rdf stain/jena \
 riot --validate mesh.nt.gz mesh_YYYY-MM-DD_....nt.gz
 ```
 
 ### Extract the translation from the backup using mesh-nt2trx tool
 
 ```bash
-docker run -it --rm --volume /$(pwd)/mesh-data/:/rdf --workdir //rdf mtw-server \
+docker run -it --rm \
+--volume /$(pwd)/mesh-data/:/rdf \
+--workdir //rdf mtw-server \
 python3 //app/tools/mesh-nt2trx.py mesh_YYYY-MM-DD_....nt.gz
 ```
 
