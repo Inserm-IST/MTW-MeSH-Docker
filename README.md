@@ -152,7 +152,7 @@ docker run -it --rm \
 --volume mtw_fuseki-data:/fuseki \
 --volume /$(pwd)/mesh-data/:/mesh-data \
 --workdir //fuseki stain/jena \
-cp backups/mesh_2024-06-11_12-27-13.nq.gz //mesh-data/
+cp backups/mesh_YYYY-MM-DD_....nt.gz //mesh-data/
 ```
 
 ### Download the official MeSH RDF dataset
