@@ -3,6 +3,8 @@
 ARG MTW_VERSION=1.6.5
 ARG PYTHON_VERSION=3.12
 
+# Stage 1:
+# Build stage to download the specified release of MTW from GitHub and untar it
 FROM debian:bookworm-slim as builder
 
 WORKDIR /tmp
@@ -15,6 +17,9 @@ ADD https://github.com/filak/MTW-MeSH/archive/refs/tags/${MTW_VERSION}.tar.gz MT
 RUN --mount=type=bind,source=.dockerignore,target=.dockerignore \ 
     tar -xf MTW-MeSH-${MTW_VERSION}.tar.gz MTW-MeSH-${MTW_VERSION}/flask-app --strip-components=1 --exclude-from=.dockerignore
 
+
+# Stage 2:
+# Python stage that will actually run the app
 FROM python:${PYTHON_VERSION}-slim as base
 
 # Keeps Python from buffering stdout and stderr to avoid situations where
@@ -27,7 +32,6 @@ WORKDIR /app
 COPY --from=builder /tmp/flask-app .
 
 # Install sqlite3
-# Install nano to edit the mtw-dist.ini configuration file
 RUN apt-get update && apt-get install -y \
     sqlite3 \
     && rm -rf /var/lib/apt/lists/*
@@ -43,12 +47,13 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 RUN sqlite3 /app/instance/db/mtw.db < /app/instance/db/mtw_schema.sql
 
 # Run set-mtw-admin tool
+# Values are provided for login and pwd using Docker secrets
 # ARG ADMIN_LOGIN
 # RUN --mount=type=secret,id=admin-settings \
 #     python /app/set-mtw-admin.py --login ${ADMIN_LOGIN} --pwd $(cat /run/secrets/admin-settings)
 
 # Run set-mtw-admin tool
-# Default values are provided for login and pwd,
+# Default values are provided for login and pwd
 # /!\ DO NOT change these values with your personnal ones,
 # as they will be visible in the image layers.
 # Instead change them before first launch by running:
@@ -66,4 +71,6 @@ COPY ./mtw-dist.ini /app/instance/conf/mtw-dist.ini
 EXPOSE 55930
 
 # Run worker & server apps
+# TODO: stop listening on all interfaces via 0.0.0.0
+# TODO: turn DEBUG off by default
 CMD python mtw-server.py --host 0.0.0.0 ${DEBUG} & python mtw-worker.py ${DEBUG}
