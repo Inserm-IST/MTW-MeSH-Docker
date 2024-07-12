@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG MTW_VERSION=1.6.5
+ARG MTW_VERSION=1.6.6
 ARG PYTHON_VERSION=3.12
 
 # Stage 1:
@@ -13,7 +13,8 @@ WORKDIR /tmp
 ARG MTW_VERSION
 ADD https://github.com/filak/MTW-MeSH/archive/refs/tags/${MTW_VERSION}.tar.gz MTW-MeSH-${MTW_VERSION}.tar.gz
 
-# Extract from tar archive excluding files according to the .dockerignore file 
+# Extract from tar archive excluding files according to the .dockerignore file
+# (exclude README.md, LICENSE, *.bat, *-dev.py etc.) 
 RUN --mount=type=bind,source=.dockerignore,target=.dockerignore \ 
     tar -xf MTW-MeSH-${MTW_VERSION}.tar.gz MTW-MeSH-${MTW_VERSION}/flask-app --strip-components=1 --exclude-from=.dockerignore
 
@@ -40,8 +41,7 @@ RUN apt-get update && apt-get install -y \
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
 # TODO: remove bin mount when pull request in release
 RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=mtw_requirements.txt,target=requirements.txt \
-    python -m pip install -r requirements.txt
+    python -m pip install -r mtw_requirements.txt
 
 # Create sqlite database
 RUN sqlite3 /app/instance/db/mtw.db < /app/instance/db/mtw_schema.sql
