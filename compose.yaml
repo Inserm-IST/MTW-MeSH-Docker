@@ -21,7 +21,7 @@ services:
     secrets:
       - admin-settings
     environment:
-      - DEBUG=--debug
+      # - DEBUG=--debug
       - ADMIN_LOGIN=admin
     labels:
       # The domain the service will respond to
@@ -38,7 +38,7 @@ services:
     # TODO: move to entrypoint.sh
     command: >
             bash -c "export ADMIN_PASSWORD=$$(cat /run/secrets/admin-settings) 
-            && source /docker-entrypoint.sh /jena-fuseki/fuseki-server --debug"
+            && source /docker-entrypoint.sh /jena-fuseki/fuseki-server $${DEBUG}"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3030/$/ping"]
       interval: 1m
@@ -54,6 +54,7 @@ services:
     secrets:
       - admin-settings
     environment:
+      # - DEBUG=--debug
       # TODO: Find optimal setting for RAM value (4G ?)
       - JVM_ARGS=-Xmx2G
       - TDB=2
