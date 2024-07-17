@@ -72,5 +72,4 @@ EXPOSE 55930
 
 # Run worker & server apps
 # TODO: stop listening on all interfaces via 0.0.0.0
-# TODO: turn DEBUG off by default
-CMD python mtw-server.py --host 0.0.0.0 ${DEBUG} & python mtw-worker.py ${DEBUG}
+CMD python mtw-server.py --host 0.0.0.0 & python mtw-worker.py 
