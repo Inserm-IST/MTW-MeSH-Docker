@@ -47,7 +47,7 @@ Install [Docker Desktop](https://www.docker.com/products/docker-desktop) for Win
 Clone the repository:
 
 ```bash
-git clone https://github.com/JulienBacquart/MTW-MeSH-Docker
+git clone https://github.com/Inserm-IST/MTW-MeSH-Docker.git
 ```
 
  Move into the new directory :
