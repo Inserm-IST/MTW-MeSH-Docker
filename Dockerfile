@@ -39,7 +39,6 @@ RUN apt-get update && apt-get install -y \
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
-# TODO: remove bin mount when pull request in release
 RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install -r mtw_requirements.txt
 
