@@ -131,7 +131,7 @@ docker compose up -d
 - Without reverse proxy:
 
   - MTW should be accessible on: <http://127.0.0.1:55930/mtw/>  
-  - Jena fuseki on: <http://127.0.0.1:3030s/#/>
+  - Jena fuseki on: <http://127.0.0.1:3030/#/>
 
 ---
 
