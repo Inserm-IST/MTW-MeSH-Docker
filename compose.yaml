@@ -5,7 +5,7 @@ services:
   server:
     build:
       context: .
-    # image: my_repository/my_mtw:latest  # if the image is uploaded to a repository, uncomment
+    # image: my_repository/mtw-server:latest  # if the image is uploaded to a repository, uncomment
     init: true  # Use tini to handle messages
     # TODO: move to entrypoint.sh
     # TODO: listen to container's ip rather than listening on all interface (0.0.0.0)
@@ -19,7 +19,7 @@ services:
       # Volumes
       - mtw-data:/app/instance/
     ports:
-      - 127.0.0.1:55930:55930
+      - 55930:55930
     secrets:
       - admin-settings
     environment:
