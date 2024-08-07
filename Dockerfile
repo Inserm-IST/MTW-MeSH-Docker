@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install -y \
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
 RUN --mount=type=cache,target=/root/.cache/pip \
-    python -m pip install -r mtw_requirements.txt
+    python -m pip install -r mtw_requirements.txt --disable-pip-version-check
 
 # Create sqlite database
 RUN sqlite3 /app/instance/db/mtw.db < /app/instance/db/mtw_schema.sql
