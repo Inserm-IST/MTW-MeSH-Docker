@@ -5,7 +5,7 @@ ARG PYTHON_VERSION=3.12
 
 # Stage 1:
 # Build stage to download the specified release of MTW from GitHub and untar it
-FROM debian:bookworm-slim as builder
+FROM debian:bookworm-slim AS builder
 
 WORKDIR /tmp
 
@@ -21,7 +21,7 @@ RUN --mount=type=bind,source=.dockerignore,target=.dockerignore \
 
 # Stage 2:
 # Python stage that will actually run the app
-FROM python:${PYTHON_VERSION}-slim as base
+FROM python:${PYTHON_VERSION}-slim AS base
 
 # Keeps Python from buffering stdout and stderr to avoid situations where
 # the application crashes without emitting any logs due to buffering.
