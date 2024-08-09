@@ -86,7 +86,6 @@ services:
 volumes:
   mtw-data:
   fuseki-data:
-  staging:
 
 secrets:
   admin-settings:
