@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG MTW_VERSION=1.6.6
+ARG MTW_VERSION=1.6.7
 ARG PYTHON_VERSION=3.12
 
 # Stage 1:
